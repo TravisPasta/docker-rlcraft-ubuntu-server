@@ -1,4 +1,4 @@
-# [RLCraft 1.12.2 - Release v2.9.3](https://www.curseforge.com/minecraft/modpacks/rlcraft) on Curseforge
+# [RLCraft 1.12.2 - Release v2.9](https://www.curseforge.com/minecraft/modpacks/rlcraft) on Curseforge
 
 <!-- toc -->
 
@@ -18,7 +18,7 @@
 
 This container is built to run on an [Unraid](https://unraid.net) server, outside of that your milliage will vary.
 
-The docker on first run will download the same version as tagged of `RLCraft 1.12.2 - Release v2.9.3` and install it.  This can take a while as the Forge installer can take a bit to complete.  You can watch the logs and it will eventually finish.
+The docker on first run will download the same version as tagged of `RLCraft 1.12.2 - Release v2.9` and install it.  This can take a while as the Forge installer can take a bit to complete.  You can watch the logs and it will eventually finish.
 
 After the first run it will simply start the server.
 
@@ -37,7 +37,7 @@ As the end user, you are repsonsible for accepting the EULA from Mojang to run t
 These environment variables can be set at run time to override their defaults.
 
 * JVM_OPTS "-Xms2048m -Xmx4096m"
-* MOTD "RLCraft 1.12.2 - Release v2.9.3 Server Powered by Docker"
+* MOTD "RLCraft 1.12.2 - Release v2.9 Server Powered by Docker"
 * LEVEL world
 
 ### Adding Minecraft Operators
