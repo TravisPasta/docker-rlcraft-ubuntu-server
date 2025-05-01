@@ -14,8 +14,8 @@ else
 exit 99
 fi
 
-if ! [[ -f "RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.zip" ]]; then
-  curl -Lo 'RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.zip' 'https://edge.forgecdn.net/files/3575/916/RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.zip' && unzip -u -o 'RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.zip' -d /data
+if ! [[ -f "RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip" ]]; then
+  curl -Lo 'RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip' 'https://edge.forgecdn.net/files/4612/990/RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip' && unzip -u -o 'RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip' -d /data
   curl -Lo forge-${FORGE_VERSION}-installer.jar 'https://maven.minecraftforge.net/net/minecraftforge/forge/'${FORGE_VERSION}'/forge-'${FORGE_VERSION}'-installer.jar'
   java -jar forge-${FORGE_VERSION}-installer.jar --installServer && rm -f forge-${FORGE_VERSION}-installer.jar
 
