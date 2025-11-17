@@ -10,7 +10,8 @@ LABEL homepage.widget.type=minecraft
 LABEL homepage.widget.url=udp://RLCraft:25565
 
 RUN apt-get update && apt-get install -y curl unzip && \
-    adduser --uid 1000 --gid 1000 --home /data --disabled-password minecraft
+    groupadd -g 1000 minecraft && \
+    useradd -u 1000 -g 1000 -d /data -m minecraft
 
 COPY launch.sh /launch.sh
 RUN chmod +x /launch.sh
