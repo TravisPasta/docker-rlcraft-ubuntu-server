@@ -1,42 +1,66 @@
 #!/bin/bash
-
 set -x
 
-if [ -w "/data" ]; then
-
 FORGE_VERSION=1.12.2-14.23.5.2860
+PACK_ZIP="RLCraft Server Pack 1.12.2 - Release v2.9.3.zip"
+PACK_URL="https://edge.forgecdn.net/files/4612/990/RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip"
+
+# Ensure /data exists
+mkdir -p /data
 cd /data
 
-if ! [[ "$EULA" = "false" ]]; then
-  echo "eula=true" > eula.txt
+# ======================
+#  EULA
+# ======================
+if [[ "$EULA" != "false" ]]; then
+    echo "eula=true" > eula.txt
 else
-  echo "You must accept the EULA to install."
-exit 99
+    echo "You must accept the EULA to install."
+    exit 99
 fi
 
-if ! [[ -f "RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip" ]]; then
-  curl -Lo 'RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip' 'https://edge.forgecdn.net/files/4612/990/RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip' && unzip -u -o 'RLCraft%20Server%20Pack%201.12.2%20-%20Release%20v2.9.3.zip' -d /data
-  curl -Lo forge-${FORGE_VERSION}-installer.jar 'https://maven.minecraftforge.net/net/minecraftforge/forge/'${FORGE_VERSION}'/forge-'${FORGE_VERSION}'-installer.jar'
-  java -jar forge-${FORGE_VERSION}-installer.jar --installServer && rm -f forge-${FORGE_VERSION}-installer.jar
+# ======================
+#  Download + Install Server
+# ======================
+if [[ ! -d "mods" ]]; then
+    echo "Downloading RLCraft pack..."
+    curl -Lo "$PACK_ZIP" "$PACK_URL"
+    unzip -o "$PACK_ZIP" -d /data
 
+    echo "Installing Forge..."
+    curl -Lo forge-installer.jar \
+        "https://maven.minecraftforge.net/net/minecraftforge/forge/${FORGE_VERSION}/forge-${FORGE_VERSION}-installer.jar"
+
+    java -jar forge-installer.jar --installServer
+
+    rm -f forge-installer.jar
 fi
 
+# ======================
+#  Server Properties
+# ======================
+# Only modify MOTD if provided
 if [[ -n "$MOTD" ]]; then
-  sed -i "s/motd\s*=/ c motd=$MOTD" /data/server.properties
+    sed -i "s/^motd=.*/motd=$MOTD/" server.properties
 fi
+
+# Set ops (simple mode)
 if [[ -n "$OPS" ]]; then
-  echo $OPS | awk -v RS=, '{print}' > ops.txt
+    echo "$OPS" | tr ',' '\n' > ops.txt
 fi
 
-sed -i 's/server-port.*/server-port=25565/g' server.properties
-sed -i 's/allow-flight.*/allow-flight=true/g' server.properties
-sed -i 's/difficulty.*/difficulty=3/g' server.properties
-sed -i 's/max-tick-time.*/max-tick-time=-1/g' server.properties
-sed -i 's/enable-command-block.*/enable-command-block=true/g' server.properties
+# Basic config tweaks
+sed -i 's/^server-port=.*/server-port=25565/' server.properties
+sed -i 's/^allow-flight=.*/allow-flight=true/' server.properties
+sed -i 's/^difficulty=.*/difficulty=3/' server.properties
+sed -i 's/^max-tick-time=.*/max-tick-time=-1/' server.properties
+sed -i 's/^enable-command-block=.*/enable-command-block=true/' server.properties
 
-java -server ${JVM_OPTS} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M ${JAVA_PARAMETERS} -jar forge-${FORGE_VERSION}.jar nogui
-
-else
-  echo "Directory is not writable, check permissions in /mnt/user/appdata/rlcraft"
-  exit 66
-fi
+# ======================
+#  Start Server
+# ======================
+java -server ${JVM_OPTS} \
+    -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy \
+    -Xmn128M \
+    ${JAVA_PARAMETERS} \
+    -jar forge-${FORGE_VERSION}.jar nogui
